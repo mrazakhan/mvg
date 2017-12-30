@@ -66,7 +66,7 @@ def load_data(path="data/", dataset="cora", layer2=False):
         labels = encode_onehot(idx_features_labels[:, -1])
         idx = np.array(idx_features_labels[:, 0], dtype=None)
         idx_map = {j: i for i, j in enumerate(idx)}
-        print(idx)
+        #print(idx)
         edges_unordered = np.genfromtxt("{}{}.cites2".format(path, dataset), dtype=None)
         flatten_edges=edges_unordered.flatten()
         flatten_edges2=[]
@@ -93,9 +93,9 @@ def load_data(path="data/", dataset="cora", layer2=False):
         idx_features_labels = np.genfromtxt("{}{}.content".format(path, dataset), dtype=np.dtype(str))
         features = sp.csr_matrix(idx_features_labels[:, 1:-2], dtype=np.float32)
         labels = encode_onehot(idx_features_labels[:, -1])
-        idx = np.array(idx_features_labels[:, 0], dtype=np.int32)
+        idx = np.array(idx_features_labels[:, 0], dtype=np.dtype(str))
         idx_map = {j: i for i, j in enumerate(idx)}
-        edges_unordered = np.genfromtxt("{}{}.cites".format(path, dataset), dtype=np.int32)
+        edges_unordered = np.genfromtxt("{}{}.cites".format(path, dataset), dtype=np.dtype(str))
         flatten_edges=edges_unordered.flatten()
         flatten_edges2=[]
         for each in flatten_edges:
@@ -111,9 +111,10 @@ def load_data(path="data/", dataset="cora", layer2=False):
     # build symmetric adjacency matrix
     adj = adj + adj.T.multiply(adj.T > adj) - adj.multiply(adj.T > adj)
     if layer2:
-        edges_similarity = np.genfromtxt("{}{}_similarity_0.4.csv".format(path, dataset), dtype=np.int32)
+        print(idx_map.keys())
+        edges_similarity = np.genfromtxt("{}{}_similarity_0.4.csv".format(path, dataset), dtype=np.dtype(str))
         edges2 = np.array(list(map(lambda x:idx_map[x], edges_similarity.flatten())),
-                         dtype=np.int32).reshape(edges_similarity.shape)
+                         dtype=None).reshape(edges_similarity.shape)
         #edges2 = np.array(list(map(idx_map.get, edges_similarity.flatten())),
         #                 dtype=np.int32).reshape(edges_similarity.shape)
         adj2 = sp.coo_matrix((np.ones(edges2.shape[0]), (edges2[:, 0], edges2[:, 1])),

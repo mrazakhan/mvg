@@ -13,7 +13,7 @@ import time
 
 # Define parameters
 DATASET = 'cora'
-#DATASET = 'citeseer'
+DATASET = 'citeseer'
 #DATASET='Pubmed-Diabetes'
 FILTER = 'chebyshev'#'localpool'  # 'chebyshev'
 MAX_DEGREE = 2  # maximum polynomial degree
