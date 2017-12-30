@@ -1,0 +1,132 @@
+This directory contains the Cora dataset, version 1.0.  Feel free to
+use the data for any research.  To cite this dataset please use the
+following:
+
+@article{McCallumIRJ,
+ author = "Andrew McCallum and Kamal Nigam and Jason Rennie and Kristie Seymore",
+ title = "Automating the Construction of Internet Portals with Machine Learning",
+ journal = "Information Retrieval Journal",
+ volume = 3,
+ pages = "127--163",
+ publisher = "Kluwer",
+ year = 2000,
+ note = "www.research.whizbang.com/data"
+}
+
+
+Note that in Cora there are two types of papers: those we found on the
+Web, and those that are referenced in bibliography sections.  It is
+possible that a paper we found on the Web is also referenced by other
+papers.  
+
+
+FILE SUMMARY:
+
+* The file `papers' contains limited information on the papers we found
+on the Web.
+
+* The file `citations' contains the citation.
+
+* The file `classifications' contains class labels 
+
+* The directory `extractions' contains the extracted authors, title,
+abstract, etc, plus the references (and in some cases surrounding
+text). from the postscript papers we found on the Web.
+
+
+PAPERS
+
+The file `papers' has a list of all the postscript file papers.
+Three fields, tab separated:
+
+   <id> <filename> <citation string>
+
+There are about about 52000 lines in this file, but there are a bunch
+of papers that have more than one postscript file.  If you eliminate
+lines with duplicate ids there are about 37000 papers.  Note the
+citation string is either (1) an arbitrary bibliography reference to
+the paper, if one was made or (2) a constructed entry based on the
+authors and title extracted from the postscript file.
+
+
+CITATIONS
+
+The file `citations' has the citation graph.  Two fields, tab
+separated:
+
+   <referring_id> <cited_id>
+
+The referring_id is the id of the paper that has the bibliography
+section (always one we have postscript for).  The cited_id is the
+paper referenced (we may or may not have postscript for it).  There
+are about 715000 citations.
+
+
+CITATIONS.WITHAUTHORS
+
+The file `citations.withauthors' contains another copy of the
+citation graph.  This time we have also included authors and file
+names of each paper in addition to each papers' unique paper_id and
+the paper_id's of the references they make. The format of this file
+is:
+
+   ***
+   this_paper_id
+   filename
+   id_of_first_cited_paper
+   id_of_second_cited_paper
+   .
+   .
+   .
+   *
+   Author#1 (of this paper)
+   Author#2
+   .
+   .
+   .
+
+CLASSIFICATIONS
+
+The file `classifications' contains the research topic classifications
+for each of the files. The format of the file is:
+"filename"+"\t"+"classification".  For example:
+
+  http:##www.ri.cmu.edu#afs#cs#user#alex#docs#idvl#dl97.ps	/Information_Retrieval/Retrieval/
+
+
+The file name is the url where the paper came translated to file name 
+by changing / to #.  The classification the label name in the Cora 
+directory hierarchy.
+
+Note that the class labels were not perfectly assigned.
+
+
+EXTRACTIONS
+
+The directory `extractions' contains 52906 files, one for each
+postscript paper that we found on the Web.  The directory contains so
+many files, that you probably don't want to `ls' it.  Commands like
+`find extractions -print' will probably work more efficiently.
+
+Each filename in the `papers' file should have a file here.  I believe
+there are also some (perhaps many?) extra files in this tarball that
+are not in paper-data that you can just ignore.
+
+Each line of each file corresponds to some bit of data about the
+postscript file.  Most of the MIME-like field tags are
+straightforward and explanatory.  A few notes:
+
+The fields URL, Refering-URL, and Root-URL are given by the spider.
+All other fields are extracted automatically from the text, some by
+hand-coded regular expressions and some by an HMM information
+extractor.
+
+The fields Abstract-found and Intro-found are binary valued indicators
+of whether Abstract and/or Introduction sections were found by some
+regular expression matching in the paper.
+
+Each Reference field is one bibliography entry found at the end of the
+paper.  Note they are marked up using SGML-like tags.  Each Reference
+field is optionally followed by one (and possibly more?)
+Reference-context fields that are snippets of the postscript file
+around where the reference was cited.
