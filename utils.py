@@ -111,8 +111,8 @@ def load_data(path="data/", dataset="cora", layer2=False):
     # build symmetric adjacency matrix
     adj = adj + adj.T.multiply(adj.T > adj) - adj.multiply(adj.T > adj)
     if layer2:
-        edges_similarity = np.genfromtxt("{}similarity_0.4.csv".format(path, dataset), dtype=np.int32)
-        edges2 = np.array(list(map(lambda x:x, edges_similarity.flatten())),
+        edges_similarity = np.genfromtxt("{}{}_similarity_0.4.csv".format(path, dataset), dtype=np.int32)
+        edges2 = np.array(list(map(lambda x:idx_map[x], edges_similarity.flatten())),
                          dtype=np.int32).reshape(edges_similarity.shape)
         #edges2 = np.array(list(map(idx_map.get, edges_similarity.flatten())),
         #                 dtype=np.int32).reshape(edges_similarity.shape)
