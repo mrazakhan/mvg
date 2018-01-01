@@ -25,7 +25,7 @@ def load_pubmed(path='data/'):
         for i, line in enumerate(fp):
             idx.append(i)
             info = line.split("\t")
-            idx_map[int(info[0])] = i
+            idx_map[info[0]] = i
             labels.append( int(info[1].split("=")[1])-1)
             for word_info in info[2:-1]:
                 word_info = word_info.split("=")
@@ -40,8 +40,8 @@ def load_pubmed(path='data/'):
         fp.readline()
         for line in fp:
             info = line.strip().split("\t")
-            orig1=int(info[1].split(":")[1])
-            orig2=int(info[-1].split(":")[1])
+            orig1=info[1].split(":")[1]
+            orig2=info[-1].split(":")[1]
             paper1 = idx_map[orig1]
             paper2 = idx_map[orig2]
             adj_lists[paper1].add(paper2)
@@ -79,14 +79,14 @@ def load_data(path="data/", dataset="cora", layer2=False):
         idx, idx_map, feat_data, labels_orig, adj_lists, adj_array=load_pubmed()
         labels=encode_onehot(labels_orig)
         features=sp.csr_matrix(feat_data, dtype=np.float32)
-        edges_unordered=np.array(adj_array, dtype=np.int32)
-        print(edges_unordered)
+        edges_unordered=np.array(adj_array, dtype=np.dtype(str))
+        #print(edges_unordered)
         flatten_edges=edges_unordered.flatten()
         flatten_edges2=[]
-        print(idx_map.keys())
+        #print(idx_map.keys())
         for each in flatten_edges:
             flatten_edges2.append(idx_map[each])
-        print(flatten_edges2)
+        #print(flatten_edges2)
         edges = np.array(flatten_edges2,dtype=np.int32).reshape(edges_unordered.shape)
         #edges = np.array(list(map(idx_map.get, edges_unordered.flatten())),dtype=np.int32).reshape(edges_unordered.shape)
     else:
@@ -111,7 +111,7 @@ def load_data(path="data/", dataset="cora", layer2=False):
     # build symmetric adjacency matrix
     adj = adj + adj.T.multiply(adj.T > adj) - adj.multiply(adj.T > adj)
     if layer2:
-        print(idx_map.keys())
+        #print(idx_map.keys())
         edges_similarity = np.genfromtxt("{}{}_similarity_0.4.csv".format(path, dataset), dtype=np.dtype(str))
         edges2 = np.array(list(map(lambda x:idx_map[x], edges_similarity.flatten())),
                          dtype=None).reshape(edges_similarity.shape)

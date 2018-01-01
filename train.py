@@ -12,9 +12,10 @@ from scipy.sparse.linalg.eigen.arpack import eigsh, ArpackNoConvergence
 import time
 
 # Define parameters
+mu=1
 DATASET = 'cora'
 DATASET = 'citeseer'
-#DATASET='Pubmed-Diabetes'
+DATASET='Pubmed-Diabetes'
 FILTER = 'chebyshev'#'localpool'  # 'chebyshev'
 MAX_DEGREE = 2  # maximum polynomial degree
 SYM_NORM = True  # symmetric (True) vs. left-only (False) normalization
@@ -75,7 +76,7 @@ elif FILTER == 'chebyshev':
         eval1, evec= eigsh(L)
         Lmod=np.zeros((L.shape[0], L.shape[1]))
         for i in range(1,6):
-            evec_mod=0.04*np.linalg.inv(L2+0.04*np.eye(L2.shape[0],L2.shape[1]))*evec[:,i].reshape((-1, 1))
+            evec_mod=mu*np.linalg.inv(L2+mu*np.eye(L2.shape[0],L2.shape[1]))*evec[:,i].reshape((-1, 1))
             L[:,i]=evec_mod
             print('L shape', L.shape)
             print('evec_mod.shape', evec_mod.shape)
