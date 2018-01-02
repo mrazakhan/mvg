@@ -149,9 +149,26 @@ def sample_mask(idx, l):
 
 
 def get_splits(y):
-    idx_train = range(200)
-    idx_val = range(200, 500)
-    idx_test = range(500, 1500)
+    train_proportion=0.6
+    val_proportion=0.2
+    test_proportion=0.2
+    idx_train = np.zeros(len(y),dtype=bool)
+    idx_val = np.zeros(len(y),dtype=bool)
+    idx_test = np.zeros(len(y),dtype=bool)
+
+    values = np.unique(y)
+    for value in values:
+        value_inds = np.nonzero(y==value)[0]
+        np.random.shuffle(value_inds)
+        n = int(train_proportion*len(value_inds))
+        m = int((train_proportion+val_proportion)*len(value_inds))
+
+        idx_train[value_inds[:n]]=True
+        idx_val[value_inds[n:m]]=True
+        idx_test[value_inds[m:]]=True
+    #idx_train = range(int(0.6*len(y)))
+    #idx_val = range(int(0.6*len(y)), int(0.8*len(y)))
+    #idx_test = range(int(0.8*len(y)), len(y))
     y_train = np.zeros(y.shape, dtype=np.int32)
     y_val = np.zeros(y.shape, dtype=np.int32)
     y_test = np.zeros(y.shape, dtype=np.int32)

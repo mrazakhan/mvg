@@ -12,10 +12,10 @@ from scipy.sparse.linalg.eigen.arpack import eigsh, ArpackNoConvergence
 import time
 
 # Define parameters
-mu=1
+mu=1.2
 DATASET = 'cora'
 DATASET = 'citeseer'
-DATASET='Pubmed-Diabetes'
+#DATASET='Pubmed-Diabetes'
 FILTER = 'chebyshev'#'localpool'  # 'chebyshev'
 MAX_DEGREE = 2  # maximum polynomial degree
 SYM_NORM = True  # symmetric (True) vs. left-only (False) normalization
@@ -23,6 +23,7 @@ NB_EPOCH = 200
 PATIENCE = 10  # early stopping patience
 
 layer2=True
+
 grossman=False
 
 # Get data
