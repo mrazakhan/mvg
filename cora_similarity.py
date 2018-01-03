@@ -5,7 +5,7 @@ from collections import defaultdict
 
 path="./data/cora/"
 dataset="cora"
-thresh=0.4
+thresh=0.7
 
 idx_features_labels = np.genfromtxt("{}{}.content".format(path, dataset), dtype=np.dtype(str))
 idx = np.array(idx_features_labels[:, 0], dtype=np.int32)

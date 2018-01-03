@@ -12,7 +12,7 @@ from scipy.sparse.linalg.eigen.arpack import eigsh, ArpackNoConvergence
 import time
 
 # Define parameters
-mu=1.2
+mu=0.7
 DATASET = 'cora'
 DATASET = 'citeseer'
 #DATASET='Pubmed-Diabetes'
@@ -25,7 +25,6 @@ PATIENCE = 10  # early stopping patience
 layer2=True
 
 grossman=False
-
 # Get data
 if not layer2:
     X, A, y = load_data(dataset=DATASET)
@@ -66,7 +65,7 @@ elif FILTER == 'chebyshev':
         print('Adding the eigenvector contribution of second layer')
         Lmod+=evec2.dot(evec2.T)
         print('Final')
-        L=sp.csr_matrix(L+L2-0.5*Lmod)
+        L=sp.csr_matrix(L+L2-mu*Lmod)
         print (L)
         
         print('Class {}'.format(type(L)))
@@ -74,13 +73,17 @@ elif FILTER == 'chebyshev':
         A2=preprocess_adj(A2,symmetric = SYM_NORM)
         L=normalized_laplacian(A, symmetric=False)
         L2=normalized_laplacian(A2, symmetric=True)
-        eval1, evec= eigsh(L)
+        eval1, evec= eigsh(L,k=L.shape[0]-1)
         Lmod=np.zeros((L.shape[0], L.shape[1]))
-        for i in range(1,6):
+        #evec_mod=mu*np.linalg.inv(L2+mu*np.eye(L2.shape[0],L2.shape[1]))*evec.reshape((-1, 1))
+        #L=evec_mod
+        #'''
+        #for i in range(1,L.shape[0]-1):
+        for i in range(1,1000):
             evec_mod=mu*np.linalg.inv(L2+mu*np.eye(L2.shape[0],L2.shape[1]))*evec[:,i].reshape((-1, 1))
             L[:,i]=evec_mod
-            print('L shape', L.shape)
-            print('evec_mod.shape', evec_mod.shape)
+            print('{} '.format(i))
+        #'''
         #L=sp.csr_matrix(Lmod, dtype=np.float32)
     L_scaled = rescale_laplacian(L)
     T_k = chebyshev_polynomial(L_scaled, MAX_DEGREE)
